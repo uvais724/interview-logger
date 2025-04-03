@@ -29,10 +29,6 @@
                 <div class="collapse-title text-lg font-medium">
                   Round {{ round.round_number }}
                 </div>
-                <!-- <div class="collapse-content">
-                  <p><strong>Questions:</strong> {{ round.questions.join(', ') }}</p>
-                  <p><strong>Feedback:</strong> {{ round.feedback }}</p>
-                </div> -->
                 <div class="collapse-content">
                   <!-- Questions Section -->
                   <p class="font-bold text-lg mb-2">Questions:</p>
@@ -101,71 +97,11 @@ import { ref, onMounted } from 'vue';
 const route = useRoute();
 const log = ref(null);
 
-// Mock data (replace with API call if needed)
-const interviewLogs = [
-  {
-    id: 1,
-    company: 'Amazon',
-    position: 'SDE-1',
-    location: 'Seattle, WA',
-    interview_date: '2023-10-01',
-    interview_type: 'Onsite',
-    skills: ['Java', 'AWS', 'Data Structures', 'Algorithms'],
-    rounds: [
-      {
-        round_number: 1,
-        questions: [
-          'Tell me about yourself.',
-          'What is your favorite data structure and why?',
-          'How do you handle conflicts in a team?',
-        ],
-        feedback: 'Strong technical skills, good cultural fit.',
-      },
-      {
-        round_number: 2,
-        questions: [
-          'Explain the concept of polymorphism.',
-          'How would you optimize a slow SQL query?',
-          'Describe a challenging project you\'ve worked on.',
-        ],
-        feedback: 'Excellent problem-solving skills.',
-      },
-    ],
-    interview_rating: 4.5,
-    takeaways: ['Prepare for behavioral questions.', 'Brush up on AWS services.'],
-    total_days_taken: 5,
-    status: 'Completed',
-  },
-  {
-    id: 2,
-    company: 'Google',
-    position: 'Software Engineer Intern',
-    location: 'Mountain View, CA',
-    interview_date: '2023-10-05',
-    interview_type: 'Phone',
-    skills: ['Python', 'Machine Learning', 'Data Analysis'],
-    rounds: [
-      {
-        round_number: 1,
-        questions: [
-          'What is your experience with Python?',
-          'Explain the difference between supervised and unsupervised learning.',
-          'How do you handle missing data in a dataset?',
-        ],
-        feedback: 'Good understanding of ML concepts.',
-      },
-    ],
-    interview_rating: 4.0,
-    takeaways: ['Focus on Python libraries for data analysis.', 'Understand ML algorithms in depth.'],
-    total_days_taken: 3,
-    status: 'Completed',
-  },
-];
 
 // Fetch the log details based on the ID from the route
-onMounted(() => {
-  const id = parseInt(route.params.id, 10);
-  log.value = interviewLogs.find((item) => item.id === id);
+onMounted(async () => {
+  const response = await fetch(`/api/interview-logs/${route.params.id}`);
+  log.value = await response.json();
 });
 
 // Dynamic class for status badge

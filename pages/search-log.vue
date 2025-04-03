@@ -90,7 +90,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="log in results" :key="log.id">
+              <tr v-for="log in results" :key="log._id">
                 <td>{{ log.company }}</td>
                 <td>{{ log.position }}</td>
                 <td>{{ log.location }}</td>
@@ -114,31 +114,6 @@
 <script setup>
 import { ref } from 'vue';
 
-// Mock data (replace with API call if needed)
-const interviewLogs = [
-  {
-    id: 1,
-    company: 'Amazon',
-    position: 'SDE-1',
-    location: 'Seattle, WA',
-    status: 'Completed',
-  },
-  {
-    id: 2,
-    company: 'Google',
-    position: 'Software Engineer Intern',
-    location: 'Mountain View, CA',
-    status: 'Completed',
-  },
-  {
-    id: 3,
-    company: 'Microsoft',
-    position: 'Cloud Engineer',
-    location: 'Redmond, WA',
-    status: 'In Progress',
-  },
-];
-
 // Filters and results
 const filters = ref({
   company: '',
@@ -150,16 +125,15 @@ const results = ref([]);
 const searched = ref(false);
 
 // Search logs based on filters
-const searchLogs = () => {
+const searchLogs = async () => {
   searched.value = true;
-  results.value = interviewLogs.filter((log) => {
-    return (
-      (!filters.value.company || log.company.toLowerCase().includes(filters.value.company.toLowerCase())) &&
-      (!filters.value.position || log.position.toLowerCase().includes(filters.value.position.toLowerCase())) &&
-      (!filters.value.location || log.location.toLowerCase().includes(filters.value.location.toLowerCase())) &&
-      (!filters.value.status || log.status === filters.value.status)
-    );
-  });
+
+  // Build query string from filters
+  const query = new URLSearchParams(filters.value).toString();
+
+  // Fetch results from the API
+  const response = await fetch(`/api/interview-logs/search?${query}`);
+  results.value = await response.json();
 };
 
 // Dynamic class for status badge

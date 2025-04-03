@@ -1,4 +1,3 @@
-<!-- filepath: g:\nodeJS_Udemy\interview-logger\pages\index.vue -->
 <template>
   <div class="min-h-screen bg-base-200">
     <div class="container mx-auto p-4">
@@ -16,7 +15,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="log in interviewLogs" :key="log.id">
+            <tr v-for="log in interviewLogs" :key="log._id">
               <td>{{ log.company }}</td>
               <td>{{ log.position }}</td>
               <td>{{ log.location }}</td>
@@ -27,7 +26,7 @@
                 </span>
               </td>
               <td>
-                <button class="btn btn-sm btn-accent" @click="goToDetails(log.id)">Show More</button>
+                <button class="btn btn-sm btn-accent" @click="goToDetails(log._id)">Show More</button>
               </td>
             </tr>
           </tbody>
@@ -39,28 +38,17 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue';
 
 const router = useRouter();
 
 // Mock data (replace with API call if needed)
-const interviewLogs = [
-  {
-    id: 1,
-    company: 'Amazon',
-    position: 'SDE-1',
-    location: 'Seattle, WA',
-    total_days_taken: 5,
-    status: 'Completed',
-  },
-  {
-    id: 2,
-    company: 'Google',
-    position: 'Software Engineer Intern',
-    location: 'Mountain View, CA',
-    total_days_taken: 3,
-    status: 'Completed',
-  },
-];
+const interviewLogs = ref([]);
+
+onMounted(async () => {
+  const response = await fetch('/api/interview-logs');
+  interviewLogs.value = await response.json();
+});
 
 // Navigate to the interview-log page with the selected log ID
 const goToDetails = (id) => {

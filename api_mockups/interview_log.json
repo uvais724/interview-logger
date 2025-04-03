@@ -1,6 +1,5 @@
 [
     {
-        "id": 1,
         "company": "Amazon",
         "position": "SDE-1",
         "location": "Seattle, WA",
@@ -41,7 +40,6 @@
         "status": "Completed"
     },
     {
-        "id": 2,
         "company": "Google",
         "position": "Software Engineer Intern",
         "location": "Mountain View, CA",

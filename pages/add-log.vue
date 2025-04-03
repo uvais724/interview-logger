@@ -1,4 +1,3 @@
-<!-- filepath: g:\nodeJS_Udemy\interview-logger\pages\add-log.vue -->
 <template>
   <div class="min-h-screen bg-base-200">
     <div class="container mx-auto p-6">
@@ -162,16 +161,33 @@ const form = ref({
 });
 
 // Submit form
-const submitForm = () => {
-  const newLog = {
-    ...form.value,
-    id: Date.now(), // Generate a unique ID
-    skills: form.value.skills.split(',').map((skill) => skill.trim()), // Convert skills to an array
-  };
+const submitForm = async () => {
+  try {
+    const newLog = {
+      ...form.value,
+      skills: form.value.skills.split(',').map((skill) => skill.trim()), // Convert skills to an array
+    };
 
-  console.log('New Interview Log:', newLog); // Replace this with an API call to save the data
-  alert('Interview log added successfully!');
-  router.push('/'); // Navigate back to the home page
+    const response = await fetch('/api/interview-logs/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newLog),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to create interview log');
+    }
+
+    const result = await response.json();
+
+    alert('Interview log added successfully!');
+    router.push('/'); // Navigate back to the home page
+  } catch (error) {
+    console.error(error);
+    alert('Failed to add interview log. Please try again.');
+  }
 };
 
 // Reset form
