@@ -1,56 +1,112 @@
+<!-- filepath: g:\nodeJS_Udemy\interview-logger\pages\search-log.vue -->
 <template>
-  <div>
-    <h1>Search Interview Logs</h1>
-    <form @submit.prevent="searchLogs">
-      <div>
-        <label for="company">Company:</label>
-        <input type="text" id="company" v-model="filters.company" placeholder="Enter company name" />
-      </div>
-      <div>
-        <label for="position">Position:</label>
-        <input type="text" id="position" v-model="filters.position" placeholder="Enter position" />
-      </div>
-      <div>
-        <label for="location">Location:</label>
-        <input type="text" id="location" v-model="filters.location" placeholder="Enter location" />
-      </div>
-      <div>
-        <label for="status">Status:</label>
-        <select id="status" v-model="filters.status">
-          <option value="">All</option>
-          <option value="Completed">Completed</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Pending">Pending</option>
-        </select>
-      </div>
-      <div>
-        <button type="submit">Search</button>
-      </div>
-    </form>
+  <div class="min-h-screen bg-base-200">
+    <div class="container mx-auto p-6">
+      <!-- Page Title -->
+      <h1 class="text-3xl font-bold text-center mb-6">Search Interview Logs</h1>
 
-    <div v-if="results.length > 0">
-      <h2>Search Results</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Company</th>
-            <th>Position</th>
-            <th>Location</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="log in results" :key="log.id">
-            <td>{{ log.company }}</td>
-            <td>{{ log.position }}</td>
-            <td>{{ log.location }}</td>
-            <td>{{ log.status }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div v-else-if="searched">
-      <p>No results found.</p>
+      <!-- Search Form -->
+      <div class="card bg-base-100 shadow-lg rounded-lg">
+        <div class="card-body">
+          <form @submit.prevent="searchLogs" class="space-y-6">
+            <!-- Company -->
+            <div class="form-control">
+              <label class="label" for="company">
+                <span class="label-text font-medium">Company</span>
+              </label>
+              <input
+                type="text"
+                id="company"
+                v-model="filters.company"
+                placeholder="Enter company name"
+                class="input input-bordered w-full"
+              />
+            </div>
+
+            <!-- Position -->
+            <div class="form-control">
+              <label class="label" for="position">
+                <span class="label-text font-medium">Position</span>
+              </label>
+              <input
+                type="text"
+                id="position"
+                v-model="filters.position"
+                placeholder="Enter position"
+                class="input input-bordered w-full"
+              />
+            </div>
+
+            <!-- Location -->
+            <div class="form-control">
+              <label class="label" for="location">
+                <span class="label-text font-medium">Location</span>
+              </label>
+              <input
+                type="text"
+                id="location"
+                v-model="filters.location"
+                placeholder="Enter location"
+                class="input input-bordered w-full"
+              />
+            </div>
+
+            <!-- Status -->
+            <div class="form-control">
+              <label class="label" for="status">
+                <span class="label-text font-medium">Status</span>
+              </label>
+              <select
+                id="status"
+                v-model="filters.status"
+                class="select select-bordered w-full"
+              >
+                <option value="">All</option>
+                <option value="Completed">Completed</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Pending">Pending</option>
+              </select>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-control">
+              <button type="submit" class="btn btn-primary w-full">Search</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Search Results -->
+      <div v-if="results.length > 0" class="mt-6">
+        <h2 class="text-2xl font-bold mb-4">Search Results</h2>
+        <div class="overflow-x-auto">
+          <table class="table w-full">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Position</th>
+                <th>Location</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="log in results" :key="log.id">
+                <td>{{ log.company }}</td>
+                <td>{{ log.position }}</td>
+                <td>{{ log.location }}</td>
+                <td>
+                  <span :class="statusClass(log.status)" class="badge">
+                    {{ log.status }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div v-else-if="searched" class="mt-6">
+        <p class="text-center text-lg">No results found.</p>
+      </div>
     </div>
   </div>
 </template>
@@ -105,55 +161,22 @@ const searchLogs = () => {
     );
   });
 };
+
+// Dynamic class for status badge
+const statusClass = (status) => {
+  switch (status) {
+    case 'Completed':
+      return 'badge-success';
+    case 'In Progress':
+      return 'badge-warning';
+    case 'Pending':
+      return 'badge-error';
+    default:
+      return 'badge-neutral';
+  }
+};
 </script>
 
 <style scoped>
-form {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-div {
-  margin-bottom: 15px;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-input, select, button {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-}
-
-button {
-  width: auto;
-  margin-right: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-th {
-  background-color: #f4f4f4;
-}
+/* Add any additional styles here if needed */
 </style>
